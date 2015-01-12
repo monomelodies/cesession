@@ -9,12 +9,13 @@ if (!isset($router)) {
 if ($router instanceof Router) {
     $router->group('cesession.api', function($router) {
         $router->state('cesession', '/cesession/', function() {
-            return new View;
+            return new View(new Session);
         });
         $router->state('cesession', '/cesession/:POST', function() {
-            $controller = new Controller;
+            $session = new Session;
+            $controller = new Controller($session);
             $controller();
-            return new View;
+            return new View($session);
         });
     });
 }
