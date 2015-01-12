@@ -8,14 +8,10 @@
  * @copyright MonoMelodies 2011, 2012, 2014, 2015
  */
 
-namespace secession;
-use Adapter_Access;
-use monolyth\utils\Translatable;
-use monolyth\adapter\nosql\KeyNotFound_Exception;
+namespace secession\Session;
 use ErrorException;
-use monolyth\Config;
 
-abstract class Session_Model
+abstract class Abstrakt
 {
     use Translatable;
     use Adapter_Access;
