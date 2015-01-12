@@ -8,14 +8,11 @@
  * @copyright MonoMelodies 2011, 2012, 2014, 2015
  */
 
-namespace secession;
+namespace cesession;
 use ErrorException;
 
-class session
+class Session
 {
-    use Translatable;
-    use Adapter_Access;
-
     /** A newly instantiated session. */
     const STATE_NEW = 'new';
     /** An existing session (the default). */
@@ -30,29 +27,11 @@ class session
     const STATE_ILLEGAL = 'illegal';
 
     /**
-     * {{{ Constants related to write modes.
-     */
-    /** Force hard write (default prefers in-memory caching). */
-    const WRITEMODE_FORCE = 1;
-    /**
-     * Fake writing, i.e. only call notify (if applicable) but don't actually
-     * attempt to update a database or whatever.
-     */
-    const WRITEMODE_FAKE = 2;
-    /** }}} */
-
-    /**
      * The period after which a session should timeout.
      * Defaults to 45 minutes; you can override this in an extended custom
-     * Session Model. The format used is lastmodified < strtotime(TIMEOUT).
+     * Session. The format used is lastmodified < strtotime(TIMEOUT).
      */
     const TIMEOUT = '-45 minutes';
-    /**
-     * The period after which a session should ALWAYS be synced back
-     * to the database. Defaults to five minutes, and is of course ignored
-     * if memcached or another caching mechanism isn't available.
-     */
-    const UPDATE = '-5 minutes';
     /**
      * The garbage collection probability. You can set this pretty low on busier
      * hosts; if it's called on average every 5 minutes, that's cool.
@@ -77,6 +56,11 @@ class session
             * collection.
             */
            $expireds;
+
+    public function registerHandler(Handler $handler)
+    {
+        $this->handlers[] = $handler;
+    }
 
     /**
      * Get/set the current session state.
