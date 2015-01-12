@@ -8,10 +8,10 @@
  * @copyright MonoMelodies 2011, 2012, 2014, 2015
  */
 
-namespace secession\Session;
+namespace secession;
 use ErrorException;
 
-abstract class Abstrakt
+class session
 {
     use Translatable;
     use Adapter_Access;
@@ -98,7 +98,7 @@ abstract class Abstrakt
      *
      * @return void
      */
-    protected function __construct()
+    public function __construct()
     {
         static $inited = false;
         if ($inited) {
