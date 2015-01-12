@@ -1,33 +1,23 @@
 <?php
 
 namespace cesession;
-use disclosure\Injector;
 
 class View
 {
-    use Injector;
-
     public function __construct()
     {
-        $session = new \StdClass;
-        /*
-        $this->inject('session');
-        $session = $this->session;
-        if (isset($session['User'])) {
+        if (isset($_SESSION['User'])) {
             foreach ([
                 'pass', 'salt', 'ipcreated', 'ipmodified', 'ipactive',
             ] as $remove) {
-                unset($session['User'][$remove]);
+                unset($_SESSION['User'][$remove]);
             }
         }
-        if (isset($session['Groups'])) {
-            unset($session['Groups']);
+        if (isset($_SESSION['Groups'])) {
+            unset($_SESSION['Groups']);
         }
-        $session['_id'] = session_id();
-        // These are already pass in $session by now:
-        self::message()->get();
-        */
-        $this->jsonData = $session;
+        $_SESSION['_id'] = session_id();
+        $this->jsonData = $_SESSION;
     }
 
     public function __invoke()
