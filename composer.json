@@ -1,0 +1,24 @@
+{
+    "name": "monomelodies/cesession",
+    "description": "Alternative PHP session handler",
+    "license": "MIT",
+    "keywords": ["php","session","handler"],
+    "authors": [
+        {
+            "name": "Marijn Ophorst",
+            "email": "marijn@monomelodies.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "monomelodies/dabble":">=0.0.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cesession\\": "src"
+        }
+    }
+}    
