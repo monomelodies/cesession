@@ -1,16 +1,15 @@
 
-CREATE TABLE cesession (
+CREATE TABLE cesession_session (
     id VARCHAR(32) NOT NULL PRIMARY KEY,
-    ip VARCHAR(39),
-    ipforward VARCHAR(39),
-    useragent VARCHAR(255),
-    datecreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    dateactive DATETIME NOT NULL,
-    checksum VARCHAR(32) NOT NULL,
     data LONGTEXT,
-    status INTEGER NOT NULL DEFAULT 0
-    INDEX(dateactive)
+    dateactive TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX cesession_dateactive_key ON cesession(dateactive);
-CREATE INDEX cesession_status_key ON cesession(status);
+CREATE INDEX cesession_session_dateactive_key ON cesession_session(dateactive);
+
+DROP TRIGGER IF EXISTS cesession_session_before_update;
+CREATE TRIGGER cesession_session_before_update BEFORE UPDATE ON cesession_session
+FOR EACH ROW
+BEGIN
+    SET NEW.dateactive = CURRENT_TIMESTAMP;
+END;
 
