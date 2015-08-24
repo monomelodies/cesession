@@ -1,0 +1,18 @@
+# vim swapfiles
+.*.sw*
+
+# Kate swapfiles
+*~
+
+# Emacs swapfiles
+.\#*
+
+# Mercurial backups
+*.orig
+
+# Mac swapfile
+._*
+
+.sass-cache
+
+vendor

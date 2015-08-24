@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="cesession_session">
+        <column>id</column>
+        <column>data</column>
+        <column>dateactive</column>
+    </table>
+</dataset>
