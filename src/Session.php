@@ -3,12 +3,13 @@
 /**
  * Common Session-handler that more specific handlers should extend.
  *
- * @package cesession
+ * @package Cesession
  * @author Marijn Ophorst <marijn@monomelodies.nl>
  * @copyright MonoMelodies 2011, 2012, 2014, 2015
  */
 
-namespace cesession;
+namespace Cesession;
+
 use ErrorException;
 
 class Session
@@ -45,9 +46,16 @@ class Session
 
     private $state = self::STATE_EXISTING;
 
+    /**
+     * Session id.
+     *
+     * @see Cesession\Session::id()
+     */
+    private $id;
+
     /** Internal variables you shouldn't worry about. Really. */
     protected $data = [], $ip, $userid, $user_agent, $dateactive,
-        $random = null, $dateactivereal, $id = null, $checksum = null,
+        $dateactivereal, $checksum = null,
         $new = false, $__savecount__ = 0, $__written__ = false;
     /** The startuperror encountered, if any. */
     public $startuperror = null,
@@ -80,29 +88,23 @@ class Session
     /**
      * Constructor. Initialise a new or existing session.
      *
+     * @param string $name The name of the session.
      * @return void
      */
-    public function __construct()
+    public function __construct($name = 'cesession')
     {
-        static $inited = false;
-        if ($inited) {
-            return;
-        }
-        $inited = true;
-        /**
-         * Some configurations have session.auto-start on (bah).
-         * First close any possibly open session.
-         */
+        // Some configurations have session.auto-start on (bah).
+        // First close any possibly open session.
         if (ini_get('session.auto_start')) {
             session_destroy();
         }
 
         static $count = 0;
         $this->dateactive = date('Y-m-d H:i:s');
-        try {
+        if (isset($_SERVER['REMOTE_ADDR'])) {
             $parts = explode(',', $_SERVER['REMOTE_ADDR']);
             $this->ip = trim(array_pop($parts));
-        } catch (ErrorException $e) {
+        } else {
             $this->ip = '0.0.0.0';
             $_SERVER['REMOTE_ADDR'] = '0.0.0.0';
         }
@@ -120,16 +122,7 @@ class Session
             [$this, 'destroy'],
             function($max_lifetime) { return 0; }
         );
-        session_name(\Project::instance()['site']);
-        $config = Config::get('monolyth');
-        session_set_cookie_params(
-            0,
-            '/',
-            \Project::instance()['cookiedomain'],
-            false,
-            $config->cookie_http_only
-        );
-        $this->id();
+        session_name($name);
     }
 
     protected function instantiate($found, $q)
@@ -248,9 +241,6 @@ class Session
      */
     public function open()
     {
-        if ($this->isBot()) {
-            return false;
-        }
         if ($this->new) {
             $this->fillDefaults();
             return $this->create();
@@ -274,59 +264,30 @@ class Session
     }
 
     /**
-     * Get the current session id. If no id exists yet,
-     * it will be generated.
+     * Get or set the current session id. If no id exists yet, it will be
+     * generated.
      *
+     * @param string $id Id to set. This is passed verbatim, so any checks
+     *                   need to be done manually!
      * @return string The current session id.
      */
-    public function id()
+    public function id($id = null)
     {
-        if (
-            isset($this->id, $this->random) and
-            strlen($this->id) && strlen($this->random)
-        ) {
-            return $this->id.$this->random;
+        if (isset($id)) {
+            $this->id = $id;
         }
-        /**
-         * Id was passed from a different domain (for multi-domain session
-         * persistance).
-         */
-        if (isset($_GET['sid'])) {
-            $_GET['sid'] = preg_replace("@[^a-zA-Z0-9-]@", '', $_GET['sid']);
-            $this->id = substr($_GET['sid'], 0, 32);
-            $this->random = substr($_GET['sid'], 32);
-            return $_GET['sid'];
-        }        
-        $long = $this->buildid();
-        $this->id = substr($long, 0, 32);
-        $this->random = substr($long, 32);
-        return $long;
-    }
-
-    /**
-     * Helper method to build a unique session id.
-     *
-     * @return string A unique session id.
-     */
-    protected function buildid()
-    {
-        if (!$this->new && isset($_COOKIE[session_name()])) {
-            return preg_replace(
-                "@[^a-zA-Z0-9-]@",
-                '',
-                $_COOKIE[session_name()]
-            );
+        if (isset($this->id)) {
+            return $this->id;
         }
-        if (!(isset($this->random) and strlen($this->random))) {
-            $this->random = rand(0, 99999);
+        $allowed = '0123456789'
+                 . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                 . 'abcdefghijklmnopqrstuvwxyz';
+        $this->id = '';
+        while (strlen($this->id) < 32) {
+            $idx = rand(0, strlen($allowed) - 1);
+            $this->id .= $allowed{$idx};
         }
-        return md5(sprintf(
-            '%d %s %s %d',
-            time(),
-            $_SERVER['REMOTE_ADDR'],
-            $this->user_agent,
-            $this->random
-        )).$this->random;
+        return $this->id;
     }
 
     /**
@@ -385,7 +346,6 @@ class Session
      */
     public function close()
     {
-        return !$this->isBot();
     }
 
     /**
@@ -444,12 +404,15 @@ class Session
         $this->__savecount__ = 0;
     }
 
+    public function destroy()
+    {
+    }
+
     /**
      * A quick and dirty check if the current user-agent is a bot.
      *
      * @return bool True if it looks like a bot, false if it seems okay.
      * @todo Maybe use some sort of config file for the IPs.
-     */
     public function isBot()
     {
         static $cached = null;
@@ -499,5 +462,6 @@ EOT
         }
         return $cached;
     }
+     */
 }
 
