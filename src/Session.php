@@ -59,8 +59,8 @@ class Session implements Handler
     {
         if ($session = $this->walk('read', null, [$id])) {
             self::$session = $session;
+            return self::$session['data'];
         }
-        return self::$session['data'];
     }
 
     public function write($id, $data)
@@ -68,7 +68,7 @@ class Session implements Handler
         return $this->walk(
             'write',
             null,
-            [$id, self::$session + compact('data')]
+            [$id, compact('data') + self::$session]
         );
     }
 
