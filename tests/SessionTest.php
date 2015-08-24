@@ -19,8 +19,7 @@ class SessionTest extends PHPUnit_Extensions_Database_TestCase
         if ($this->conn === null) {
             $db = get_current_user().'_ft';
             if (self::$pdo === null) {
-                //self::$pdo = new PDO('sqlite::memory:');
-                self::$pdo = new PDO('sqlite:bla');
+                self::$pdo = new PDO('sqlite::memory:');
                 self::$pdo->exec(file_get_contents(dirname(__DIR__).'/info/sql/sqlite.sql'));
             }
             $this->conn = $this->createDefaultDBConnection(self::$pdo, $db);
