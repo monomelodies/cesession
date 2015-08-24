@@ -4,19 +4,19 @@ namespace Cesession;
 
 class Session implements Handler
 {
-    public static $session;
+    public static $session = [];
     private $handlers = [];
 
     public function __construct($name)
     {
-        session_start($name);
+        session_name($name);
         session_set_save_handler(
-            [$session, 'open'],
-            [$session, 'close'],
-            [$session, 'read'],
-            [$session, 'write'],
-            [$session, 'destroy'],
-            [$session, 'gc']
+            [$this, 'open'],
+            [$this, 'close'],
+            [$this, 'read'],
+            [$this, 'write'],
+            [$this, 'destroy'],
+            [$this, 'gc']
         );
     }
 
@@ -47,22 +47,29 @@ class Session implements Handler
 
     public function open()
     {
-        self::$session = $this->walk('open');
+        $this->walk('gc');
     }
 
     public function close()
     {
-        return $this->walk('close');
+        return $this->walk('gc');
     }
 
     public function read($id)
     {
-        return $this->walk('read', null, [$id]);
+        if ($session = $this->walk('read', null, [$id])) {
+            self::$session = $session;
+        }
+        return self::$session['data'];
     }
 
     public function write($id, $data)
     {
-        return $this->walk('write', null, [$id, $data]);
+        return $this->walk(
+            'write',
+            null,
+            [$id, self::$session + compact('data')]
+        );
     }
 
     public function destroy($id)
