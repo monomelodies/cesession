@@ -31,11 +31,8 @@ class Pdo implements Handler
     public function write($id, $data)
     {
         static $create, $update;
+        $values = $data + compact('id'); // Default.
         if (!isset($create, $update)) {
-            $values = compact('id', 'data'); // Default.
-            foreach (self::$session as $key => $value) {
-                $values[$key] = $value;
-            }
             $fields = [];
             $placeholders = [];
             $updates = [];
@@ -53,7 +50,7 @@ class Pdo implements Handler
             ));
             $update = $this->pdo->prepare(sprintf(
                 "UPDATE cesession_session SET %s WHERE id = :id",
-                implode(', ', $placeholders)
+                implode(', ', $updates)
             ));
         }
         // Try update first since that's the most common case.
@@ -61,8 +58,8 @@ class Pdo implements Handler
         if ($affectedRows = $update->rowCount() and $affectedRows) {
             return true;
         }
-        $insert->execute($values);
-        return ($affectedRows = $insert->rowCount()) && $affectedRows;
+        $create->execute($values);
+        return ($affectedRows = $create->rowCount()) && $affectedRows;
     }
     
     public function destroy($id)
