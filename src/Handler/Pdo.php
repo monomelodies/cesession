@@ -7,6 +7,7 @@ use Cesession\Handler;
 class Pdo implements Handler
 {
     private $pdo;
+    private $exists = false;
 
     public function __construct(\PDO $pdo)
     {
@@ -23,8 +24,10 @@ class Pdo implements Handler
         }
         $stmt->execute(compact('id'));
         if ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $this->exists = true;
             return $data;
         }
+        $this->exists = false;
         return false;
     }
     
@@ -53,13 +56,13 @@ class Pdo implements Handler
                 implode(', ', $updates)
             ));
         }
-        // Try update first since that's the most common case.
-        $update->execute($values);
-        if ($affectedRows = $update->rowCount() and $affectedRows) {
+        if ($this->exists) {
+            $update->execute($values);
             return true;
+        } else {
+            $create->execute($values);
+            return ($affectedRows = $create->rowCount()) && $affectedRows;
         }
-        $create->execute($values);
-        return ($affectedRows = $create->rowCount()) && $affectedRows;
     }
     
     public function destroy($id)
