@@ -1,11 +1,12 @@
 <?php
 
-namespace cesession;
+namespace Cesession;
 
 interface Handler
 {
-    public function read();
-    public function write();
-
+    public function read($id);
+    public function write($id, $data);
+    public function destroy($id);
+    public function gc();
 }
 
