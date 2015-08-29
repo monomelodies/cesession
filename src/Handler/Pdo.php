@@ -39,7 +39,7 @@ class Pdo implements Handler
         if (!isset($create, $update)) {
             $fields = [];
             $placeholders = [];
-            $updates = ['dateactive = NOW()'];
+            $updates = [];
             foreach ($values as $key => $value) {
                 $fields[] = $key;
                 $placeholders[] = ":$key";
