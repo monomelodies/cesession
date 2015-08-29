@@ -35,6 +35,7 @@ class Pdo implements Handler
     {
         static $create, $update;
         $values = $data + compact('id'); // Default.
+        unset($values['dateactive']);
         if (!isset($create, $update)) {
             $fields = [];
             $placeholders = [];
@@ -58,7 +59,7 @@ class Pdo implements Handler
         }
         if ($this->exists) {
             $update->execute($values);
-            return true;
+            return (bool)$update->rowCount();
         } else {
             $create->execute($values);
             return ($affectedRows = $create->rowCount()) && $affectedRows;
