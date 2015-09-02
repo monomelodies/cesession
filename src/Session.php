@@ -32,6 +32,7 @@ class Session implements Handler
 
     private function walk($method, $highProbability = null, array $args = [])
     {
+        $result = false;
         foreach ($this->handlers as $data) {
             list($handler, $chainProbability) = $data;
             $probability = isset($highProbability) ?
