@@ -53,7 +53,8 @@ class Pdo implements Handler
                 implode(', ', $placeholders)
             ));
             $update = $this->pdo->prepare(sprintf(
-                "UPDATE cesession_session SET %s WHERE id = :id",
+                "UPDATE cesession_session SET %s, dateactive = NOW()
+                    WHERE id = :id",
                 implode(', ', $updates)
             ));
         }
