@@ -78,7 +78,7 @@ class Pdo implements Handler
         return ($affectedRows = $stmt->rowCount()) && $affectedRows;
     }
     
-    public function gc()
+    public function gc($maxlifetime)
     {
         static $stmt;
         if (!isset($stmt)) {
@@ -86,7 +86,10 @@ class Pdo implements Handler
                 "DELETE FROM cesession_session WHERE dateactive < ?"
             );
         }
-        $stmt->execute([date('Y-m-d H:i:s', strtotime('-45 minute'))]);
+        $stmt->execute([date(
+            'Y-m-d H:i:s',
+            strtotime("-$maxlifetime second")
+        )]);
         return ($affectedRows = $stmt->rowCount()) && $affectedRows;
     }
 }
