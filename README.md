@@ -79,10 +79,21 @@ array of arguments to pass:
 <?php
 
 // Force emptying of the current session on all handlers:
-$session->force('write', [session_id(), []]);
+$session->force(
+    'write',
+    [session_id(), ['data' => serialize([])] + $session::$session]
+);
 ```
 
 Internally this calls the method on all defined handlers with a probability of
 100%. Note that using `force` only makes sense if you have multiple handlers
 defined with varying probabilities.
+
+> The forwarding is done directly on the _handlers_, hence the arguments passed
+> are slightly different than on the main `Session` object. Most importantly,
+> `$data` is not passed to `write` as a string but as a hash with augmented
+> meta information about the session.
+
+## Writing your own handlers
+See the examples in `./src/Handler`. It's simple enough.
 
