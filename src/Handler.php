@@ -2,6 +2,9 @@
 
 namespace Cesession;
 
+/**
+ * Interface for session handlers.
+ */
 interface Handler
 {
     public function read($id);
