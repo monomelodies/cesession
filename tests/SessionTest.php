@@ -32,9 +32,6 @@ class SessionTest extends PHPUnit_Extensions_Database_TestCase
         return $this->createXmlDataSet(__DIR__.'/data.xml');
     }
 
-    /**
-     * @outputBuffering enabled
-     */
     public function testSession()
     {
         $session = new Session('phpunit');
@@ -42,12 +39,37 @@ class SessionTest extends PHPUnit_Extensions_Database_TestCase
         @session_start();
         $_SESSION['foo'] = 'bar';
         session_write_close();
-        foreach (self::$pdo->query("SELECT * FROM cesession_session") as $sess) {
-            var_dump($sess);
-        }
+        $cnt = self::$pdo->query("SELECT * FROM cesession_session");
+        $this->assertEquals(1, count($cnt));
+        $_SESSION = [];
         @session_start();
-        var_dump($_SESSION);
-        var_dump(Session::$session);
+        $this->assertEquals('bar', $_SESSION['foo']);
+        session_write_close();
+    }
+
+    public function testHandlers()
+    {
+        $session = new Session('phpunit');
+        $memcached = new Memcached;
+        $memcached->addServer('http://localhost', 11211);
+        $session->registerHandler(new Handler\Memcached($memcached), 10);
+        $session->registerHandler(new Handler\Pdo(self::$pdo));
+        @session_start();
+        $_SESSION['foo'] = 'bar';
+        session_write_close();
+        $_SESSION = [];
+        @session_start();
+        $this->assertEquals('bar', $_SESSION['foo']);
+        $session->force(
+            'write',
+            [
+                session_id(),
+                ['data' => serialize($_SESSION)] + $session::$session,
+            ]
+        );
+        $cnt = self::$pdo->query("SELECT * FROM cesession_session");
+        $this->assertEquals(1, count($cnt));
+        session_write_close();
     }
 }
 

@@ -14,37 +14,23 @@ foreign key constraint between the current user and the current session, so
 people get automatically logged out.
 
 ## Installation
-1. Composer (recommended):
-    1. `$ composer require monomelodies/cesession`
-2. Manual:
-    1. Clone or download the repository;
-    2. Add the `Cesession` namespace to your autoloader for
-       `/path/to/cesession/src`.
+
+### Composer (recommended)
+`$ composer require monomelodies/cesession`
+
+### Manual
+1. Clone or download the repository;
+2. Add the `Cesession` namespace to your autoloader for
+   `/path/to/cesession/src`.
 3. Create the relevant table (see scripts in `./info/sql`)
-4. Instantiate the `Session` object to get going.
 
 That's it!
 
 ## Setting up
 To begin, _before_ any call to `session_start` create the `Cesession\Session`
-object:
-
-```php
-<?php
-
-use Cesession\Session;
-
-$session = new Session('my-session-name');
-session_start();
-```
-
-By itself, the above doesn't do much (it's simply a wrapper to PHP's normal
-sessions). To make Cesession useful, you'll want to register _handlers_.
-
-## Registering a PDO handler
-To register a handler, simply call the `registerHandler` method on the
-`$session` object and pass in a handler object. Each handler object _must_
-implement the `Cesession\Handler` interface:
+object and register a _handler_. Currently Cesession ships with a `Pdo` handler
+that does exactly what its name implies (store the session data in a
+PDO-compatible database, e.g. PostgreSQL or MySQL):
 
 ```php
 <?php
@@ -58,6 +44,13 @@ $handler = new Handler\Pdo($db);
 $session->registerHandler($handler);
 session_start();
 ```
+
+## Registering a PDO handler
+To register a handler, simply call the `registerHandler` method on the
+`$session` object and pass in a handler object. Each handler object _must_
+implement the `Cesession\Handler` interface. This is done both for type hinting
+and to ensure the required methods exist. The `Handler` interface is a subset
+of PHP's built-in `SessionHandlerInterface`.
 
 The optional second argument to `registerHandler` is a probability percentage
 between 0 and 100. This signifies the probability that for supporting calls, the
@@ -73,5 +66,34 @@ $session->registerHandler(new Handler\Memcached($memcached), 10);
 $session->registerHandler(new Handler\Pdo($db));
 ```
 
-> Note: currently only the Pdo handler is supported out of the box.
+> Note: currently only the Pdo and Memcached handlers are supported out of the
+> box.
+
+## Forcing an operation on all handlers
+Sometimes you'll want to ensure an operation gets persisted to all handlers, for
+instance when a user's authentication state changes. Use the `force` method for
+this. The first argument is the session method you need to call, the second an
+array of arguments to pass:
+
+```php
+<?php
+
+// Force emptying of the current session on all handlers:
+$session->force(
+    'write',
+    [session_id(), ['data' => serialize([])] + $session::$session]
+);
+```
+
+Internally this calls the method on all defined handlers with a probability of
+100%. Note that using `force` only makes sense if you have multiple handlers
+defined with varying probabilities.
+
+> The forwarding is done directly on the _handlers_, hence the arguments passed
+> are slightly different than on the main `Session` object. Most importantly,
+> `$data` is not passed to `write` as a string but as a hash with augmented
+> meta information about the session.
+
+## Writing your own handlers
+See the examples in `./src/Handler`. It's simple enough.
 
