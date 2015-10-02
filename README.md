@@ -66,5 +66,23 @@ $session->registerHandler(new Handler\Memcached($memcached), 10);
 $session->registerHandler(new Handler\Pdo($db));
 ```
 
-> Note: currently only the Pdo handler is supported out of the box.
+> Note: currently only the Pdo and Memcached handlers are supported out of the
+> box.
+
+## Forcing an operation on all handlers
+Sometimes you'll want to ensure an operation gets persisted to all handlers, for
+instance when a user's authentication state changes. Use the `force` method for
+this. The first argument is the session method you need to call, the second an
+array of arguments to pass:
+
+```php
+<?php
+
+// Force emptying of the current session on all handlers:
+$session->force('write', [session_id(), []]);
+```
+
+Internally this calls the method on all defined handlers with a probability of
+100%. Note that using `force` only makes sense if you have multiple handlers
+defined with varying probabilities.
 
