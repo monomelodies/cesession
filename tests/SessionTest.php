@@ -42,12 +42,11 @@ class SessionTest extends PHPUnit_Extensions_Database_TestCase
         @session_start();
         $_SESSION['foo'] = 'bar';
         session_write_close();
-        foreach (self::$pdo->query("SELECT * FROM cesession_session") as $sess) {
-            var_dump($sess);
-        }
+        $cnt = self::$pdo->query("SELECT * FROM cesession_session");
+        $this->assertEquals(1, count($cnt));
+        $_SESSION = [];
         @session_start();
-        var_dump($_SESSION);
-        var_dump(Session::$session);
+        $this->assertEquals('bar', $_SESSION['foo']);
     }
 }
 
