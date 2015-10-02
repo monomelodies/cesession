@@ -2,7 +2,9 @@
 
 namespace Cesession;
 
-class Session implements Handler
+use SessionHandlerInterface;
+
+class Session implements SessionHandlerInterface
 {
     public static $session = [];
     private $handlers = [];
@@ -10,14 +12,7 @@ class Session implements Handler
     public function __construct($name)
     {
         session_name($name);
-        session_set_save_handler(
-            [$this, 'open'],
-            [$this, 'close'],
-            [$this, 'read'],
-            [$this, 'write'],
-            [$this, 'destroy'],
-            [$this, 'gc']
-        );
+        session_set_save_handler($this, true);
     }
 
     public function registerHandler(Handler $handler, $chainProbability = 0)
