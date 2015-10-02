@@ -41,14 +41,16 @@ class Session implements SessionHandlerInterface
         return $result;
     }
 
-    public function open()
+    public function open($save_path, $name)
     {
-        $this->walk('gc');
+        if (!$this->handlers) {
+            throw new NoHandlersDefinedException;
+        }
     }
 
     public function close()
     {
-        return $this->walk('gc');
+        return true;
     }
 
     public function read($id)
@@ -74,9 +76,9 @@ class Session implements SessionHandlerInterface
         return $this->walk('destroy', 100, [$id]);
     }
 
-    public function gc()
+    public function gc($maxlifetime)
     {
-        return $this->walk('gc');
+        return $this->walk('gc', null, [$maxlifetime]);
     }
 }
 
