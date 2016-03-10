@@ -70,7 +70,7 @@ class Pdo implements Handler
     {
         static $stmt;
         if (!isset($stmt)) {
-            $stmt = $this->pdo->prepace(
+            $stmt = $this->pdo->prepare(
                 "DELETE FROM cesession_session WHERE id = :id"
             );
         }
