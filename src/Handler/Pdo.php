@@ -25,6 +25,7 @@ class Pdo implements Handler
         $stmt->execute(compact('id'));
         if ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $this->exists = true;
+            $data['data'] = base64_decode($data['data']);
             return $data;
         }
         $this->exists = false;
@@ -40,7 +41,10 @@ class Pdo implements Handler
             $fields = [];
             $placeholders = [];
             $updates = [];
-            foreach ($values as $key => $value) {
+            foreach ($values as $key => &$value) {
+                if ($key == 'data') {
+                    $value = base64_encode($value);
+                }
                 $fields[] = $key;
                 $placeholders[] = ":$key";
                 if ($key != 'id') {
