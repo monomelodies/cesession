@@ -22,7 +22,7 @@ class Memcached implements Handler
     public function read($id)
     {
         if ($data = $this->mc->get($this->getKey())
-            and $data = unserialize($data)
+            and $data = json_decode($data, true)
         ) {
             $this->exists = true;
             return $data;
@@ -37,7 +37,7 @@ class Memcached implements Handler
         $values['dateactive'] = date('Y-m-d H:i:s');
         return $this->mc->set(
             $this->getKey(),
-            serialize($data),
+            json_encode($data),
             ini_get('session.gc_maxlifetime')
         );
     }
