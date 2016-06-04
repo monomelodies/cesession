@@ -37,7 +37,7 @@ class Memcached implements Handler
         $values['dateactive'] = date('Y-m-d H:i:s');
         return $this->mc->set(
             $this->getKey(),
-            json_encode($data),
+            serialize($data),
             ini_get('session.gc_maxlifetime')
         );
     }
