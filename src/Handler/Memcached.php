@@ -22,7 +22,7 @@ class Memcached implements Handler
     public function read($id)
     {
         if ($data = $this->mc->get($this->getKey())
-            and $data = unserialize($data)
+            and $data = json_decode($data, true)
         ) {
             $this->exists = true;
             return $data;

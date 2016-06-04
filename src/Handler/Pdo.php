@@ -34,7 +34,7 @@ class Pdo implements Handler
     
     public function write($id, $data)
     {
-        static $create, $update;
+        static $create, $update, $delete;
         $values = $data + compact('id'); // Default.
         unset($values['dateactive']);
         if (!isset($create, $update)) {
@@ -60,11 +60,15 @@ class Pdo implements Handler
                 "UPDATE cesession_session SET %s WHERE id = :id",
                 implode(', ', $updates)
             ));
+            $delete = $this->pdo->prepare(
+                "DELETE FROM cesession_session WHERE id = :id"
+            );
         }
         if ($this->exists) {
             $update->execute($values);
             return (bool)$update->rowCount();
         } else {
+            $delete->execute(compact('id'));
             $create->execute($values);
             return ($affectedRows = $create->rowCount()) && $affectedRows;
         }
