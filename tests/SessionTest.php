@@ -1,7 +1,7 @@
 <?php
 
-use Cesession\Session;
-use Cesession\Handler;
+use Monolyth\Cesession\Session;
+use Monolyth\Cesession\Handler;
 
 class SessionTest extends PHPUnit_Extensions_Database_TestCase
 {
