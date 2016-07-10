@@ -1,74 +1,86 @@
 <?php
 
+namespace Monolyth\Cesession\Tests;
+
 use Monolyth\Cesession\Session;
 use Monolyth\Cesession\Handler;
+use PDO;
+use Memcached;
 
-class SessionTest extends PHPUnit_Extensions_Database_TestCase
+class SessionTest
 {
     static private $pdo = null;
+    static private $sessions = null;
     private $conn = null;
 
-    protected function getSetUpOperation()
+    public function __wakeup()
     {
-        // Needed for truncates to cascade...
-        return PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT(true);
-    }
-    
-    public function getConnection()
-    {
-        if ($this->conn === null) {
-            $db = get_current_user().'_ft';
-            if (self::$pdo === null) {
-                self::$pdo = new PDO('sqlite::memory:');
-                self::$pdo->exec(file_get_contents(dirname(__DIR__).'/info/sql/sqlite.sql'));
-            }
-            $this->conn = $this->createDefaultDBConnection(self::$pdo, $db);
+        if (self::$pdo === null) {
+            self::$pdo = new PDO('sqlite::memory:');
+            self::$pdo->exec(file_get_contents(dirname(__DIR__).'/info/sql/sqlite.sql'));
+            self::$sessions = self::$pdo->prepare("SELECT * FROM cesession_session");
+            ini_set('session.serialize_handler', 'php_serialize');
         }
-        return $this->conn;
-    }
-    
-    public function getDataSet()
-    {
-        return $this->createXmlDataSet(__DIR__.'/data.xml');
+        return [];
     }
 
+    /**
+     * On an empty session table, starting a session should insert exactly one
+     * row {?}. After reopening, a session value should be persisted {?}.
+     */
     public function testSession()
     {
-        $session = new Session('phpunit');
+        $session = new Session('testing');
         $session->registerHandler(new Handler\Pdo(self::$pdo));
-        @session_start();
+        $session->open('', 'testing');
+        $session->read('testing');
         $_SESSION['foo'] = 'bar';
-        session_write_close();
-        $cnt = self::$pdo->query("SELECT * FROM cesession_session");
-        $this->assertEquals(1, count($cnt));
+        $session->write('testing', serialize($_SESSION));
+        $session->close();
+        self::$sessions->execute();
+        $cnt = self::$sessions->fetchAll();
+        yield assert(count($cnt) == 1);
         $_SESSION = [];
-        @session_start();
-        $this->assertEquals('bar', $_SESSION['foo']);
-        session_write_close();
+        $session->open('', 'testing');
+        $_SESSION = unserialize($session->read('testing'));
+        yield assert($_SESSION['foo'] == 'bar');
+        $session->close();
     }
 
+    /**
+     * Using multiple handlers, a session value should be persisted {?}. When
+     * forcing a write, it should be stored throuh the database fallback handler
+     * {?}.
+     */
     public function testHandlers()
     {
-        $session = new Session('phpunit');
+        $session = new Session('testing');
         $memcached = new Memcached;
         $memcached->addServer('http://localhost', 11211);
         $session->registerHandler(new Handler\Memcached($memcached), 10);
         $session->registerHandler(new Handler\Pdo(self::$pdo));
-        @session_start();
+        $session->open('', 'testing');
+        $session->read('testing');
         $_SESSION['foo'] = 'bar';
-        session_write_close();
+        $session->write('testing', serialize($_SESSION));
+        $session->close();
+        self::$sessions->execute();
+        $cnt = self::$sessions->fetchAll();
+        yield assert(count($cnt) == 1);
         $_SESSION = [];
-        @session_start();
-        $this->assertEquals('bar', $_SESSION['foo']);
+        $session->open('', 'testing');
+        $_SESSION = unserialize($session->read('testing'));
+        yield assert($_SESSION['foo'] == 'bar');
         $session->force(
             'write',
             [
-                session_id(),
-                ['data' => serialize($_SESSION)] + $session::$session,
+                'testing',
+                ['data' => serialize($_SESSION)]
             ]
         );
-        $cnt = self::$pdo->query("SELECT * FROM cesession_session");
-        $this->assertEquals(1, count($cnt));
+        self::$sessions->execute();
+        $cnt = self::$sessions->fetchAll();
+        yield assert(count($cnt) == 1);
         session_write_close();
     }
 }
