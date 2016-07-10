@@ -1,8 +1,8 @@
 {
-    "name": "monomelodies/cesession",
-    "description": "Alternative PHP session handler",
+    "name": "monolyth/cesession",
+    "description": "Alternative PHP session handler for Monolyth unframework",
     "license": "MIT",
-    "keywords": ["php","session","handler"],
+    "keywords": ["monolyth","php","session","handler"],
     "authors": [
         {
             "name": "Marijn Ophorst",
@@ -13,13 +13,17 @@
         "php": ">=5.4"
     },
     "require-dev": {
-        "phpunit/phpunit": ">=4.0",
-        "phpunit/dbunit": ">=1.0",
-        "ext-memcached": "*"
+        "ext-memcached": "*",
+        "gentry/gentry": "^0.9.0"
     },
     "autoload": {
         "psr-4": {
-            "Cesession\\": "src"
+            "Monolyth\\Cesession\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Monolyth\\Cesession\\Tests\\": "tests"
         }
     }
-}    
+}

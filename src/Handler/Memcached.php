@@ -1,8 +1,8 @@
 <?php
 
-namespace Cesession\Handler;
+namespace Monolyth\Cesession\Handler;
 
-use Cesession\Handler;
+use Monolyth\Cesession\Handler;
 
 class Memcached implements Handler
 {
@@ -14,17 +14,17 @@ class Memcached implements Handler
         $this->mc = $mc;
     }
 
-    private function getKey()
+    private function getKey($id = null)
     {
-        return sprintf('%s/session/%s', session_name(), session_id());
+        $id = $id ?: session_id();
+        return sprintf('%s/session/%s', session_name(), $id);
     }
     
     public function read($id)
     {
-        if ($data = $this->mc->get($this->getKey())
+        if ($data = $this->mc->get($this->getKey($id))
             and $data = json_decode($data, true)
         ) {
-            $this->exists = true;
             return $data;
         }
         $this->exists = false;
@@ -36,8 +36,8 @@ class Memcached implements Handler
         $values = $data + compact('id'); // Default.
         $values['dateactive'] = date('Y-m-d H:i:s');
         return $this->mc->set(
-            $this->getKey(),
-            serialize($data),
+            $this->getKey($id),
+            json_encode($values),
             ini_get('session.gc_maxlifetime')
         );
     }
@@ -49,7 +49,7 @@ class Memcached implements Handler
     
     public function gc($maxlifetime)
     {
-        // Handled automatically be Memcached (3rd parameter to set).
+        // Handled automatically be Memcached.
         return true;
     }
 }
