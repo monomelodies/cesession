@@ -1,8 +1,8 @@
 {
-    "name": "monomelodies/cesession",
-    "description": "Alternative PHP session handler",
+    "name": "monolyth/cesession",
+    "description": "Alternative PHP session handler for Monolyth unframework",
     "license": "MIT",
-    "keywords": ["php","session","handler"],
+    "keywords": ["monolyth","php","session","handler"],
     "authors": [
         {
             "name": "Marijn Ophorst",
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Cesession\\": "src"
+            "Monolyth\\Cesession\\": "src"
         }
     }
 }    
