@@ -1,6 +1,6 @@
 <?php
 
-namespace cesession;
+namespace Monolyth\Cesession;
 
 abstract class Exception extends \Exception
 {

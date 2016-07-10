@@ -1,6 +1,6 @@
 <?php
 
-namespace Cesession;
+namespace Monolyth\Cesession;
 
 use SessionHandlerInterface;
 

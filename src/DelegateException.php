@@ -1,6 +1,6 @@
 <?php
 
-namespace cesession;
+namespace Monolyth\Cesession;
 
 class DelegateException extends Exception
 {
