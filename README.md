@@ -1,5 +1,5 @@
 # CeSession
-Alternative PHP session handler
+Alternative PHP session handler for Monolyth unframework
 
 ## Who is this for?
 While PHP supports session handling, the implementation is less than stellar.
@@ -16,27 +16,27 @@ people get automatically logged out.
 ## Installation
 
 ### Composer (recommended)
-`$ composer require monomelodies/cesession`
+`$ composer require monolyth/cesession`
 
 ### Manual
 1. Clone or download the repository;
-2. Add the `Cesession` namespace to your autoloader for
+2. Add the `Monolyth\Cesession` namespace to your autoloader for
    `/path/to/cesession/src`.
 3. Create the relevant table (see scripts in `./info/sql`)
 
 That's it!
 
 ## Setting up
-To begin, _before_ any call to `session_start` create the `Cesession\Session`
-object and register a _handler_. Currently Cesession ships with a `Pdo` handler
-that does exactly what its name implies (store the session data in a
-PDO-compatible database, e.g. PostgreSQL or MySQL):
+To begin, _before_ any call to `session_start` create the
+`Monolyth\Cesession\Session` object and register a _handler_. Currently
+Cesession ships with a `Pdo` handler that does exactly what its name implies
+(store the session data in a PDO-compatible database, e.g. PostgreSQL or MySQL):
 
 ```php
 <?php
 
-use Cesession\Session;
-use Cesession\Handler;
+use Monolyth\Cesession\Session;
+use Monolyth\Cesession\Handler;
 
 $session = new Session('my-session-name');
 $db = new PDO('dsn', 'user', 'pass');
@@ -48,9 +48,9 @@ session_start();
 ## Registering a PDO handler
 To register a handler, simply call the `registerHandler` method on the
 `$session` object and pass in a handler object. Each handler object _must_
-implement the `Cesession\Handler` interface. This is done both for type hinting
-and to ensure the required methods exist. The `Handler` interface is a subset
-of PHP's built-in `SessionHandlerInterface`.
+implement the `Monolyth\Cesession\Handler` interface. This is done both for type
+hinting and to ensure the required methods exist. The `Handler` interface is a
+subset of PHP's built-in `SessionHandlerInterface`.
 
 The optional second argument to `registerHandler` is a probability percentage
 between 0 and 100. This signifies the probability that for supporting calls, the
