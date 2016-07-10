@@ -45,7 +45,7 @@ $session->registerHandler($handler);
 session_start();
 ```
 
-## Registering a PDO handler
+## Registering handlers
 To register a handler, simply call the `registerHandler` method on the
 `$session` object and pass in a handler object. Each handler object _must_
 implement the `Monolyth\Cesession\Handler` interface. This is done both for type
@@ -96,4 +96,18 @@ defined with varying probabilities.
 
 ## Writing your own handlers
 See the examples in `./src/Handler`. It's simple enough.
+
+## Session encoding/decoding
+By default, Cesession uses the `session.serialize_handler` PHP ini setting to
+en/decode session data. You can override this, e.g. in your `php.ini` or by
+calling `ini_set('session.serialize_handler, 'new value')`. See the PHP manual
+for valid values, but say you wanted to store session data using regular
+`serialize` and `unserialize` calls, you would do this:
+
+```php
+ini_set('session.serialize_handler', 'php_serialize');
+```
+
+This allows you to modify the session data more easily from other places in your
+code (say, a cronjob) without having to resort to weird trickery.
 
