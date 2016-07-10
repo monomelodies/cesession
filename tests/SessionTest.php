@@ -48,6 +48,29 @@ class SessionTest
     }
 
     /**
+     * Using memcache, a session should also be "persisted" {?}.
+     */
+    public function testMemcached()
+    {
+        $session = new Session('testing');
+        $memcached = new Memcached;
+        $memcached->addServer('127.0.0.1', 11211);
+        $memcached->flush();
+        $session->registerHandler(new Handler\Memcached($memcached));
+        $session->open('', 'testing');
+        $session->read('testing');
+        $_SESSION['foo'] = 'bar';
+        $session->write('testing', serialize($_SESSION));
+        $session->close();
+        self::$sessions->execute();
+        $_SESSION = [];
+        $session->open('', 'testing');
+        $_SESSION = unserialize($session->read('testing'));
+        yield assert($_SESSION['foo'] == 'bar');
+        $session->close();
+    }
+
+    /**
      * Using multiple handlers, a session value should be persisted {?}. When
      * forcing a write, it should be stored throuh the database fallback handler
      * {?}.
@@ -56,7 +79,8 @@ class SessionTest
     {
         $session = new Session('testing');
         $memcached = new Memcached;
-        $memcached->addServer('http://localhost', 11211);
+        $memcached->addServer('127.0.0.1', 11211);
+        $memcached->flush();
         $session->registerHandler(new Handler\Memcached($memcached), 10);
         $session->registerHandler(new Handler\Pdo(self::$pdo));
         $session->open('', 'testing');
