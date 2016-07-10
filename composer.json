@@ -20,5 +20,10 @@
         "psr-4": {
             "Monolyth\\Cesession\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Monolyth\\Cesession\\Tests\\": "tests"
+        }
     }
 }
