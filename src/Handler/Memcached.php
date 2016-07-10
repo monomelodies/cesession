@@ -1,8 +1,8 @@
 <?php
 
-namespace Cesession\Handler;
+namespace Monolyth\Cesession\Handler;
 
-use Cesession\Handler;
+use Monolyth\Cesession\Handler;
 
 class Memcached implements Handler
 {
