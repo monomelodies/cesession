@@ -13,13 +13,12 @@
         "php": ">=5.4"
     },
     "require-dev": {
-        "phpunit/phpunit": ">=4.0",
-        "phpunit/dbunit": ">=1.0",
-        "ext-memcached": "*"
+        "ext-memcached": "*",
+        "gentry/gentry": "^0.9.0"
     },
     "autoload": {
         "psr-4": {
             "Monolyth\\Cesession\\": "src"
         }
     }
-}    
+}
