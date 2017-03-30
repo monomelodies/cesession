@@ -3,6 +3,7 @@
 namespace Monolyth\Cesession\Handler;
 
 use Monolyth\Cesession\Handler;
+use PDOException;
 
 class Pdo implements Handler
 {
@@ -69,8 +70,13 @@ class Pdo implements Handler
             return (bool)$update->rowCount();
         } else {
             $delete->execute(compact('id'));
-            $create->execute($values);
-            return ($affectedRows = $create->rowCount()) && $affectedRows;
+            try {
+                $create->execute($values);
+                return ($affectedRows = $create->rowCount()) && $affectedRows;
+            } catch (PDOException $e) {
+                $update->execute($values);
+                return (bool)$update->rowCount();
+            }
         }
     }
     
