@@ -1,0 +1,6 @@
+{
+    "src": "src",
+    "tests": "tests",
+    "includePath": [],
+    "ignore": ".*?Controller$"
+}
