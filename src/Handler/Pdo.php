@@ -16,6 +16,7 @@ class Pdo implements Handler
      * Constructor.
      *
      * @param PDO $pdo
+     * @return void
      */
     public function __construct(\PDO $pdo)
     {
