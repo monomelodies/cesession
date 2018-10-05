@@ -7,21 +7,32 @@ use PDOException;
 
 class Pdo implements Handler
 {
+    /** @var PDO */
     private $pdo;
+    /** @var bool */
     private $exists = false;
 
+    /**
+     * Constructor.
+     *
+     * @param PDO $pdo
+     */
     public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
     }
-    
-    public function read($id)
+
+    /**
+     * Reads the session identified by `$id`, if it exists.
+     *
+     * @param string $id
+     * @return array|null The row read, or null if not found.
+     */
+    public function read(string $id) :? array
     {
         static $stmt;
         if (!isset($stmt)) {
-            $stmt = $this->pdo->prepare(
-                "SELECT * FROM cesession_session WHERE id = :id"
-            );
+            $stmt = $this->pdo->prepare("SELECT * FROM cesession_session WHERE id = :id");
         }
         $stmt->execute(compact('id'));
         if ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -30,10 +41,17 @@ class Pdo implements Handler
             return $data;
         }
         $this->exists = false;
-        return false;
+        return null;
     }
     
-    public function write($id, $data)
+    /**
+     * Write back data.
+     *
+     * @param string $id The session ID.
+     * @param array $data Hash of data.
+     * @return bool True on success, else false.
+     */
+    public function write(string $id, array $data) : bool
     {
         static $create, $update, $delete;
         $values = $data + compact('id'); // Default.
@@ -61,9 +79,7 @@ class Pdo implements Handler
                 "UPDATE cesession_session SET %s WHERE id = :id",
                 implode(', ', $updates)
             ));
-            $delete = $this->pdo->prepare(
-                "DELETE FROM cesession_session WHERE id = :id"
-            );
+            $delete = $this->pdo->prepare("DELETE FROM cesession_session WHERE id = :id");
         }
         if ($this->exists) {
             $update->execute($values);
@@ -80,19 +96,30 @@ class Pdo implements Handler
         }
     }
     
-    public function destroy($id)
+    /**
+     * Destroy the session identified by `$id`.
+     *
+     * @param string $id
+     * @return bool True on success, else false.
+     */
+    public function destroy(string $id) : bool
     {
         static $stmt;
         if (!isset($stmt)) {
-            $stmt = $this->pdo->prepare(
-                "DELETE FROM cesession_session WHERE id = :id"
-            );
+            $stmt = $this->pdo->prepare("DELETE FROM cesession_session WHERE id = :id");
         }
         $stmt->execute(compact('id'));
         return ($affectedRows = $stmt->rowCount()) && $affectedRows;
     }
     
-    public function gc($maxlifetime)
+    /**
+     * Run garbase collection.
+     *
+     * @param int $maxlifetime Maximum number of seconds a session may be
+     *  inactive before it is eligible for garabage collection.
+     * @return bool True if anything was removed, else false.
+     */
+    public function gc(int $maxlifetime) : bool
     {
         static $stmt;
         if (!isset($stmt)) {
@@ -100,10 +127,7 @@ class Pdo implements Handler
                 "DELETE FROM cesession_session WHERE dateactive < ?"
             );
         }
-        $stmt->execute([date(
-            'Y-m-d H:i:s',
-            strtotime("-$maxlifetime second")
-        )]);
+        $stmt->execute([date('Y-m-d H:i:s', strtotime("-$maxlifetime second"))]);
         return ($affectedRows = $stmt->rowCount()) && $affectedRows;
     }
 }
