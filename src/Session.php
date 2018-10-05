@@ -16,8 +16,9 @@ class Session implements SessionHandlerInterface
      * Constructor.
      *
      * @param string $name The session_name() you want to use.
+     * @return void
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         session_name($name);
         session_set_save_handler($this, true);
@@ -27,12 +28,13 @@ class Session implements SessionHandlerInterface
      * Register a session handler.
      *
      * @param Cesession\Handler $handler Handler object to use.
-     * @param integer $chainProbability The probability, expressed as a
-     *  percentage, that calls on this handler will afterwards be forwarded to
-     *  the next handler in the chain.
+     * @param int $chainProbability The probability, expressed as a percentage,
+     *  that calls on this handler will afterwards be forwarded to the next
+     *  handler in the chain.
+     * @return void
      * @see Cesession\Handler
      */
-    public function registerHandler(Handler $handler, $chainProbability = 0)
+    public function registerHandler(Handler $handler, int $chainProbability = 0) : void
     {
         static $first = true;
         if ($first) {
@@ -48,12 +50,12 @@ class Session implements SessionHandlerInterface
      * @param string $method Method name to call on each handler. Note that the
      *  method definitions on handlers differ from those in
      *  SessionHandlerInterface.
-     * @param integer|null $highProbability Override to the handler's defined
+     * @param int|null $highProbability Override to the handler's defined
      *  $chainProbability. Defaults to null, i.e. not used.
      * @param array $args The arguments to pass to $method.
      * @return mixed Whatever $method returned.
      */
-    private function walk($method, $highProbability = null, array $args = [])
+    private function walk(string $method, int $highProbability = null, array $args = [])
     {
         $result = false;
         foreach ($this->handlers as $data) {
@@ -76,10 +78,10 @@ class Session implements SessionHandlerInterface
      * @param string $save_path Not used normally.
      * @param string $name Not used normally.
      * @return boolean True (we assume success).
-     * @throws Cesession\NoHandlersDefinedException if not handlers were defined
+     * @throws Cesession\NoHandlersDefinedException if no handlers were defined
      *  (which would make this whole module less than useful anyway).
      */
-    public function open($save_path, $name)
+    public function open(string $save_path, string $name) : bool
     {
         if (!$this->handlers) {
             throw new NoHandlersDefinedException;
@@ -98,7 +100,7 @@ class Session implements SessionHandlerInterface
      *
      * @return boolean True (we assume success).
      */
-    public function close()
+    public function close() : bool
     {
         foreach ($this->handlers as $handler) {
             if (method_exists($handler, 'close')) {
@@ -114,7 +116,7 @@ class Session implements SessionHandlerInterface
      * @param string $id The session ID.
      * @return string The read data.
      */
-    public function read($id)
+    public function read(string $id) : string
     {
         if ($session = $this->walk('read', null, [$id])) {
             self::$session = $session;
@@ -130,7 +132,7 @@ class Session implements SessionHandlerInterface
      * @param string $data The serialized session data as passed by PHP.
      * @return boolean True on success, else false.
      */
-    public function write($id, $data)
+    public function write(string $id, string $data) : bool
     {
         return (bool)$this->walk(
             'write',
@@ -145,7 +147,7 @@ class Session implements SessionHandlerInterface
      * @param string $id The session ID.
      * @return boolean True on success, else false.
      */
-    public function destroy($id)
+    public function destroy(string $id) : bool
     {
         // Override with 100 to close every handler.
         return (bool)$this->walk('destroy', 100, [$id]);
@@ -158,7 +160,7 @@ class Session implements SessionHandlerInterface
      *  be older than to be eligible for garbage collection.
      * @return boolean True on success, else false.
      */     
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime) : bool
     {
         return $this->walk('gc', null, [$maxlifetime]);
     }
@@ -171,7 +173,7 @@ class Session implements SessionHandlerInterface
      * @param array $args Arguments to pass.
      * @return mixed Whatever $method returned.
      */
-    public function force($method, array $args = [])
+    public function force(string $method, array $args = [])
     {
         return $this->walk($method, 100, $args);
     }
