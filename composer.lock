@@ -4,43 +4,23 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ff634510c664a4ee65168cbc0c83349",
-    "packages": [],
-    "packages-dev": [
+    "content-hash": "1bfdfd36eefbd3bb5b26fc6e4e670001",
+    "packages": [
         {
-            "name": "gentry/gentry",
-            "version": "0.13.4",
+            "name": "gentry/toast",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/gentry-php/gentry.git",
-                "reference": "be0c8a5b80fc03a532924cbda4b4c8dd50e63c8c"
+                "url": "https://github.com/gentry-php/toast.git",
+                "reference": "c5b9ea4e7a3a683006ba182fe137f2455b5f264e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gentry-php/gentry/zipball/be0c8a5b80fc03a532924cbda4b4c8dd50e63c8c",
-                "reference": "be0c8a5b80fc03a532924cbda4b4c8dd50e63c8c",
+                "url": "https://api.github.com/repos/gentry-php/toast/zipball/c5b9ea4e7a3a683006ba182fe137f2455b5f264e",
+                "reference": "c5b9ea4e7a3a683006ba182fe137f2455b5f264e",
                 "shasum": ""
             },
-            "require": {
-                "monomelodies/kingconf": "^1.1.0",
-                "monomelodies/reflex": "^0.2.0",
-                "php": ">=7.2",
-                "simoneast/simple-ansi-colors": "^1.0",
-                "twig/twig": ">=1.0",
-                "zeptech/annotations": "^1.0.0"
-            },
-            "require-dev": {
-                "toast/unit": "^1.3"
-            },
-            "bin": [
-                "bin/gentry"
-            ],
             "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Gentry\\Gentry\\": "src"
-                }
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -51,8 +31,8 @@
                     "email": "marijn@monomelodies.nl"
                 }
             ],
-            "description": "PHP unit test generation tools",
-            "time": "2018-09-17T12:08:10+00:00"
+            "description": "Toast templates for Gentry",
+            "time": "2017-09-19T11:32:17+00:00"
         },
         {
             "name": "monomelodies/kingconf",
@@ -103,47 +83,6 @@
                 "yaml"
             ],
             "time": "2018-07-18T07:30:47+00:00"
-        },
-        {
-            "name": "monomelodies/reflex",
-            "version": "0.2.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/monomelodies/reflex.git",
-                "reference": "5f9cbb6737381bbb33bf1f4c6f6bf6951037e692"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/monomelodies/reflex/zipball/5f9cbb6737381bbb33bf1f4c6f6bf6951037e692",
-                "reference": "5f9cbb6737381bbb33bf1f4c6f6bf6951037e692",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7",
-                "zeptech/annotations": "^1.1"
-            },
-            "require-dev": {
-                "toast/unit": "^1.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Monomelodies\\Reflex\\": "./src",
-                    "Tests\\": "./classes-for-testing"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marijn Ophorst",
-                    "email": "marijn@monomelodies.nl"
-                }
-            ],
-            "description": "Reflection utilities for PHP7+",
-            "time": "2017-09-27T06:54:28+00:00"
         },
         {
             "name": "simoneast/simple-ansi-colors",
@@ -250,6 +189,187 @@
             "time": "2018-08-06T14:22:27+00:00"
         },
         {
+            "name": "symfony/yaml",
+            "version": "v2.8.46",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "5baf0f821b14eee8ca415e6a0361a9fa140c002c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/5baf0f821b14eee8ca415e6a0361a9fa140c002c",
+                "reference": "5baf0f821b14eee8ca415e6a0361a9fa140c002c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "symfony/polyfill-ctype": "~1.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-08-29T13:11:53+00:00"
+        },
+        {
+            "name": "toast/unit",
+            "version": "1.3.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/toast-php/unit.git",
+                "reference": "542affd107c613225c8f0fe101518be785b9675a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/toast-php/unit/zipball/542affd107c613225c8f0fe101518be785b9675a",
+                "reference": "542affd107c613225c8f0fe101518be785b9675a",
+                "shasum": ""
+            },
+            "require": {
+                "monomelodies/kingconf": "^1.1.0",
+                "php": ">=7",
+                "simoneast/simple-ansi-colors": "^1.0"
+            },
+            "bin": [
+                "bin/toast"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Toast\\Unit\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn Ophorst",
+                    "email": "marijn@monomelodies.nl"
+                }
+            ],
+            "description": "Super-simple unit testing for PHP7",
+            "time": "2018-07-19T13:53:46+00:00"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "gentry/gentry",
+            "version": "0.13.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gentry-php/gentry.git",
+                "reference": "be0c8a5b80fc03a532924cbda4b4c8dd50e63c8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gentry-php/gentry/zipball/be0c8a5b80fc03a532924cbda4b4c8dd50e63c8c",
+                "reference": "be0c8a5b80fc03a532924cbda4b4c8dd50e63c8c",
+                "shasum": ""
+            },
+            "require": {
+                "monomelodies/kingconf": "^1.1.0",
+                "monomelodies/reflex": "^0.2.0",
+                "php": ">=7.2",
+                "simoneast/simple-ansi-colors": "^1.0",
+                "twig/twig": ">=1.0",
+                "zeptech/annotations": "^1.0.0"
+            },
+            "require-dev": {
+                "toast/unit": "^1.3"
+            },
+            "bin": [
+                "bin/gentry"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gentry\\Gentry\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn Ophorst",
+                    "email": "marijn@monomelodies.nl"
+                }
+            ],
+            "description": "PHP unit test generation tools",
+            "time": "2018-09-17T12:08:10+00:00"
+        },
+        {
+            "name": "monomelodies/reflex",
+            "version": "0.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/monomelodies/reflex.git",
+                "reference": "5f9cbb6737381bbb33bf1f4c6f6bf6951037e692"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/monomelodies/reflex/zipball/5f9cbb6737381bbb33bf1f4c6f6bf6951037e692",
+                "reference": "5f9cbb6737381bbb33bf1f4c6f6bf6951037e692",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7",
+                "zeptech/annotations": "^1.1"
+            },
+            "require-dev": {
+                "toast/unit": "^1.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Monomelodies\\Reflex\\": "./src",
+                    "Tests\\": "./classes-for-testing"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn Ophorst",
+                    "email": "marijn@monomelodies.nl"
+                }
+            ],
+            "description": "Reflection utilities for PHP7+",
+            "time": "2017-09-27T06:54:28+00:00"
+        },
+        {
             "name": "symfony/polyfill-mbstring",
             "version": "v1.9.0",
             "source": {
@@ -307,56 +427,6 @@
                 "shim"
             ],
             "time": "2018-08-06T14:22:27+00:00"
-        },
-        {
-            "name": "symfony/yaml",
-            "version": "v2.8.46",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "5baf0f821b14eee8ca415e6a0361a9fa140c002c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/5baf0f821b14eee8ca415e6a0361a9fa140c002c",
-                "reference": "5baf0f821b14eee8ca415e6a0361a9fa140c002c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9",
-                "symfony/polyfill-ctype": "~1.8"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Yaml\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Yaml Component",
-            "homepage": "https://symfony.com",
-            "time": "2018-08-29T13:11:53+00:00"
         },
         {
             "name": "twig/twig",
