@@ -10,7 +10,9 @@
         }
     ],
     "require": {
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "toast/unit": "^1.3",
+        "gentry/toast": "^0.1.0"
     },
     "require-dev": {
         "ext-memcached": "*",
