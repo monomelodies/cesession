@@ -14,7 +14,7 @@
     },
     "require-dev": {
         "ext-memcached": "*",
-        "gentry/gentry": "^0.10.0"
+        "gentry/gentry": "^0.13.0"
     },
     "autoload": {
         "psr-4": {
