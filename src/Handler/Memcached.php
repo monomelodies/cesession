@@ -81,7 +81,7 @@ class Memcached implements Handler
      */
     public function gc(int $maxlifetime) : bool
     {
-        // Handled automatically be Memcached.
+        // Handled automatically by Memcached.
         return true;
     }
 }
