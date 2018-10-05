@@ -7,9 +7,9 @@ namespace Monolyth\Cesession;
  */
 interface Handler
 {
-    public function read($id);
-    public function write($id, $data);
-    public function destroy($id);
-    public function gc($maxlifetime);
+    public function read(string $id) :? array;
+    public function write(string $id, array $data) : bool;
+    public function destroy(string $id) : bool;
+    public function gc(int $maxlifetime) : bool;
 }
 
