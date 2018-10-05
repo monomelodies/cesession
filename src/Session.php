@@ -81,7 +81,7 @@ class Session implements SessionHandlerInterface
      * @throws Cesession\NoHandlersDefinedException if no handlers were defined
      *  (which would make this whole module less than useful anyway).
      */
-    public function open(string $save_path, string $name) : bool
+    public function open($save_path, $name) : bool
     {
         if (!$this->handlers) {
             throw new NoHandlersDefinedException;
@@ -116,7 +116,7 @@ class Session implements SessionHandlerInterface
      * @param string $id The session ID.
      * @return string The read data.
      */
-    public function read(string $id) : string
+    public function read($id) : string
     {
         if ($session = $this->walk('read', null, [$id])) {
             self::$session = $session;
@@ -132,7 +132,7 @@ class Session implements SessionHandlerInterface
      * @param string $data The serialized session data as passed by PHP.
      * @return boolean True on success, else false.
      */
-    public function write(string $id, string $data) : bool
+    public function write($id, $data) : bool
     {
         return (bool)$this->walk(
             'write',
@@ -147,7 +147,7 @@ class Session implements SessionHandlerInterface
      * @param string $id The session ID.
      * @return boolean True on success, else false.
      */
-    public function destroy(string $id) : bool
+    public function destroy($id) : bool
     {
         // Override with 100 to close every handler.
         return (bool)$this->walk('destroy', 100, [$id]);
@@ -160,7 +160,7 @@ class Session implements SessionHandlerInterface
      *  be older than to be eligible for garbage collection.
      * @return boolean True on success, else false.
      */     
-    public function gc(int $maxlifetime) : bool
+    public function gc($maxlifetime) : bool
     {
         return $this->walk('gc', null, [$maxlifetime]);
     }
