@@ -10,13 +10,13 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
-        "toast/unit": "^1.3",
-        "gentry/toast": "^0.1.0"
+        "php": ">=7.3"
     },
     "require-dev": {
         "ext-memcached": "*",
-        "gentry/gentry": "^0.13.0"
+        "gentry/gentry": "^0.13.0",
+        "toast/unit": "^1.3",
+        "gentry/toast": "^0.1.0"
     },
     "autoload": {
         "psr-4": {
