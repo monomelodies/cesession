@@ -5,7 +5,7 @@ use Monolyth\Cesession\Handler;
 use Gentry\Gentry\Wrapper;
 
 /** Tests for sessions */
-return function ($test) : Generator {
+return function () : Generator {
     $pdo = new PDO('sqlite::memory:');
     $pdo->exec(file_get_contents(dirname(__DIR__).'/info/sql/sqlite.sql'));
     $sessions = $pdo->prepare("SELECT * FROM cesession_session");
