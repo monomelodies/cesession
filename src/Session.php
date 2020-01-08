@@ -9,7 +9,14 @@ use SessionHandlerInterface;
  */
 class Session implements SessionHandlerInterface
 {
+    /** @var array */
     public static $session = [];
+
+    /**
+     * Array of handlers registered for this session.
+     *
+     * @var array
+     */
     private $handlers = [];
 
     /**
