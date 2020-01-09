@@ -34,7 +34,7 @@ class Session implements SessionHandlerInterface
     /**
      * Register a session handler.
      *
-     * @param Cesession\Handler $handler Handler object to use.
+     * @param Monolyth\Cesession\Handler $handler Handler object to use.
      * @param int $chainProbability The probability, expressed as a percentage,
      *  that calls on this handler will afterwards be forwarded to the next
      *  handler in the chain.
@@ -85,7 +85,7 @@ class Session implements SessionHandlerInterface
      * @param string $save_path Not used normally.
      * @param string $name Not used normally.
      * @return boolean True (we assume success).
-     * @throws Cesession\NoHandlersDefinedException if no handlers were defined
+     * @throws Monolyth\Cesession\NoHandlersDefinedException if no handlers were defined
      *  (which would make this whole module less than useful anyway).
      */
     public function open($save_path, $name) : bool
