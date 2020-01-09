@@ -45,6 +45,15 @@ $session->registerHandler($handler);
 session_start();
 ```
 
+Alternatively, there is also a `Memcached` handler. Since objects stored in
+Memcached can be deleted at any time, this should only be used as a fallback in
+conjunction with a more persistent handler like `Pdo`.
+
+### Database tables
+Example schemas are included in the `./info` directory. These contain the
+minimum columns needed for the `Pdo` handler to work; depending on your needs
+you can add extra columns (e.g. `auth` for the currently logged in user's id).
+
 ## Registering handlers
 To register a handler, simply call the `registerHandler` method on the
 `$session` object and pass in a handler object. Each handler object _must_
