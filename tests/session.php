@@ -7,7 +7,7 @@ use Gentry\Gentry\Wrapper;
 /** Tests for sessions */
 return function () : Generator {
     $pdo = new PDO('sqlite::memory:');
-    $pdo->exec(file_get_contents(dirname(__DIR__).'/info/sql/sqlite.sql'));
+    $pdo->exec(file_get_contents(dirname(__DIR__).'/info/sqlite.sql'));
     $sessions = $pdo->prepare("SELECT * FROM cesession_session");
             //ini_set('session.serialize_handler', 'php_serialize');
     /**
