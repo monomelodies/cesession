@@ -9,6 +9,7 @@ class Pdo implements Handler
 {
     /** @var PDO */
     private $pdo;
+
     /** @var bool */
     private $exists = false;
 
