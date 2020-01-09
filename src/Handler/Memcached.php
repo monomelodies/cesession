@@ -8,6 +8,7 @@ class Memcached implements Handler
 {
     /** @var Memcached */
     private $mc;
+
     /** @var bool */
     private $exists = false;
 
