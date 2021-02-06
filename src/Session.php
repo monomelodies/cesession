@@ -67,9 +67,7 @@ class Session implements SessionHandlerInterface
         $result = false;
         foreach ($this->handlers as $data) {
             list($handler, $chainProbability) = $data;
-            $probability = isset($highProbability) ?
-                $highProbability :
-                $chainProbability;
+            $probability = $highProbability ?? $chainProbability;
             $result = call_user_func_array([$handler, $method], $args);
             if ($result and mt_rand(0, 100) > $probability) {
                 return $result;
@@ -94,8 +92,8 @@ class Session implements SessionHandlerInterface
             throw new NoHandlersDefinedException;
         }
         foreach ($this->handlers as $handler) {
-            if (method_exists($handler, 'open')) {
-                $handler->open($save_path, $name);
+            if (method_exists($handler[0], 'open')) {
+                $handler[0]->open($save_path, $name);
             }
         }
         return true;
@@ -110,8 +108,8 @@ class Session implements SessionHandlerInterface
     public function close() : bool
     {
         foreach ($this->handlers as $handler) {
-            if (method_exists($handler, 'close')) {
-                $handler->close();
+            if (method_exists($handler[0], 'close')) {
+                $handler[0]->close();
             }
         }
         return true;
