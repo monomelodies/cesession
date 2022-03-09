@@ -165,6 +165,7 @@ class Session implements SessionHandlerInterface
      *  be older than to be eligible for garbage collection.
      * @return boolean True on success, else false.
      */     
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime) : bool
     {
         return $this->walk('gc', null, [$maxlifetime]);
